@@ -169,7 +169,7 @@ class DrawController extends Controller
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('GET')
-            ->setUrl('https://art-street.ru/draw/sync-base-json')
+            ->setUrl('https://art-street.ru/site/sync-base-json')
             ->setOptions([
                 'timeout' => 10, // set timeout to 5 seconds for the case server is not responding
             ])
