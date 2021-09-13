@@ -39,7 +39,7 @@ class DrawController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete-main-template' => ['post'],
-                    'sync-base' => ['post'],
+                   // 'sync-base' => ['post'],
                 ],
             ],
         ];
@@ -166,13 +166,23 @@ class DrawController extends Controller
     }
 
     public function actionSyncBase (){
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl('https://art-street.ru/draw/sync-base-json')
+            ->setOptions([
+                'timeout' => 10, // set timeout to 5 seconds for the case server is not responding
+            ])
+            ->send();
+        if ($response->isOk) {
+            print_r($response->content);
+        } else {
+            print_r($response);
+        }
 
+        //https://art-street.ru/draw/sync-base-json
     }
 
-    public function actionSyncBaseJson (){
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        return MainTemplate::find()->all();
-    }
 
     /**
      * Сжимаем строку.

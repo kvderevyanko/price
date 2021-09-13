@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\MainTemplate;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
@@ -119,27 +120,10 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionTest()
-    {
-        $a = [
-            [0,0,0,0,0,1,1,1,1,1,1],
-            [0,0,0,0,1,1,1,1,1,1,0],
-            [0,0,0,1,1,1,1,1,1,0,0],
-            [0,0,1,1,1,1,1,1,0,0,0],
-            [0,1,1,1,1,1,1,0,0,0,0],
-            [1,1,1,1,1,1,0,0,0,0,0],
-        ];
 
-        $a = Json::encode($a);
-        $a = str_replace(['[', ']'], ['{', '}'], $a);
-        print_r($a);
-        exit;
-        return $this->render('test');
+    public function actionSyncBaseJson (){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return MainTemplate::find()->all();
     }
 }
 
