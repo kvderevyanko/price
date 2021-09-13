@@ -30,6 +30,7 @@ class MainTemplate extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id'], 'integer'],
             [['code'], 'string'],
             [['date', 'userId'], 'integer'],
             [['name'], 'string', 'max' => 255],

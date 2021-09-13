@@ -261,7 +261,7 @@ $("#syncBase").on('click', function(){
     $.post(urlSyncBase, {
         _csrf:$("[name='csrf-token']").attr('content'),
     }, function (data) {
-        cl(data)
+        logField.append('Синхронизировано '+data+' <br>');
     }).fail(function(data) {
         logField.append('Ошибка синхронизации <br>');
         cl(data)

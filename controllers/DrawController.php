@@ -166,6 +166,8 @@ class DrawController extends Controller
     }
 
     public function actionSyncBase (){
+        $total = 0;
+
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('GET')
@@ -175,12 +177,29 @@ class DrawController extends Controller
             ])
             ->send();
         if ($response->isOk) {
-            print_r($response->content);
+            try {
+                $content = Json::decode($response->content);
+                if(is_array($content)) {
+                    foreach ($content as $t) {
+                        $template = MainTemplate::findOne($t['id']);
+                        if($template === null) {
+                            $template = new MainTemplate();
+                        }
+                        $template->attributes = $t;
+                        if($template->save()) {
+                            $total++;
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                echo 'Выброшено исключение: ',  $e->getMessage(), "\n";
+            }
+
+
         } else {
             print_r($response);
         }
-
-        //https://art-street.ru/draw/sync-base-json
+        return $total;
     }
 
 
