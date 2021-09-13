@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Upload</title>
+    <link rel="stylesheet" type="text/css" href="upload.css"/>
+    <script src="upload.js"></script>
+  </head>
+  <body>
+    <div id="dropbox" class="dropBox">
+      <div id="upload">
+	<div id="uploaddir" class="uploadDir">
+	  <a onclick='UploadDir("");'>/</a>
+	  <a onclick='UploadDir("http");'>/http</a>
+	  <div id="selectedDir">selected Directory: <div id = "dir">bla</div></div></div>
+	<div id="drop">
+	  Drop Here
+
+	  <a onclick='document.getElementById("browseInput").click();'>Browse</a>
+	  <a onclick='UploadFiles();'>Upload</a>
+	  <form><input id="browseInput" type="file" name="upl" onclick="this.form.reset();" onchange="handleFiles(this.files);" multiple /></form>
+	</div>
+
+	<ul id="fileList">
+	</ul>
+	<div class="fileInfo">Files on device:</div>
+	<ul id="fileInfo">
+	</ul>
+      </div>
+    </div>
+  </body>
+</html>
