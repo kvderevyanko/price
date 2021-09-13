@@ -252,3 +252,19 @@ savePrice.on('click', function(){
         cl(data)
     })
 })
+
+$("#syncBase").on('click', function(){
+    logField.html('');
+    logField.append('Синхронизация баз <br>');
+    logField.append('Получение данных <br>');
+
+    $.post(urlSyncBase, {
+        _csrf:$("[name='csrf-token']").attr('content'),
+    }, function (data) {
+        cl(data)
+    }).fail(function(data) {
+        logField.append('Ошибка синхронизации <br>');
+        cl(data)
+    })
+
+});

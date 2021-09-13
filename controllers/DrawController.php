@@ -39,6 +39,7 @@ class DrawController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete-main-template' => ['post'],
+                    'sync-base' => ['post'],
                 ],
             ],
         ];
@@ -164,6 +165,14 @@ class DrawController extends Controller
 
     }
 
+    public function actionSyncBase (){
+
+    }
+
+    public function actionSyncBaseJson (){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return MainTemplate::find()->all();
+    }
 
     /**
      * Сжимаем строку.

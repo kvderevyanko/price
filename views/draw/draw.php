@@ -47,6 +47,8 @@ $this->title = 'Рисование';
         </label><br>
         <input type="hidden" value="<?=Yii::$app->request->get('id')?>" id="priceId">
         <span class="btn btn-success" id="savePrice">Отправить</span>
+
+        <span class="btn btn-danger btn-sm" style="margin-top: 50px" id="syncBase">Синхронизация баз</span>
     </div>
     <div class="col-sm-4 text-small" id="logField">
 
@@ -60,6 +62,7 @@ $this->title = 'Рисование';
     let urlDeleteMainTemplate = "<?=\yii\helpers\Url::to(['delete-main-template'])?>";
     let urlSavePrice = "<?=\yii\helpers\Url::to(['save-price'])?>";
     let urlShowPrice = "<?=\yii\helpers\Url::to(['show-price'])?>";
+    let urlSyncBase = "<?=\yii\helpers\Url::to(['sync-base'])?>";
     let codeGenerate = "";
     <?php if($codeGenerate):?>
     codeGenerate = '<?=$codeGenerate?>';
