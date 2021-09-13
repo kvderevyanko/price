@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -123,8 +124,23 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionAbout()
+    public function actionTest()
     {
-        return $this->render('about');
+        $a = [
+            [0,0,0,0,0,1,1,1,1,1,1],
+            [0,0,0,0,1,1,1,1,1,1,0],
+            [0,0,0,1,1,1,1,1,1,0,0],
+            [0,0,1,1,1,1,1,1,0,0,0],
+            [0,1,1,1,1,1,1,0,0,0,0],
+            [1,1,1,1,1,1,0,0,0,0,0],
+        ];
+
+        $a = Json::encode($a);
+        $a = str_replace(['[', ']'], ['{', '}'], $a);
+        print_r($a);
+        exit;
+        return $this->render('test');
     }
 }
+
+

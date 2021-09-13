@@ -8,7 +8,9 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
+use yii\httpclient\Client;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -95,5 +97,131 @@ class DrawController extends Controller
             }
         }
         return 0;
+    }
+
+    public function actionSavePrice($id, $contrast = 125, $blue = true, $bluePwm = 1000){
+        $template = MainTemplate::findOne($id);
+        if ($template === null) {
+            throw new NotFoundHttpException("Шаблон не найден");
+        }
+        $code = "";
+        if($template->code) {
+            try {
+                $code = Json::decode($template->code);
+            } catch (\Exception $e) {}
+        }
+
+        if(!is_array($code)) {
+            throw new NotFoundHttpException('$code не массив');
+        }
+
+        $zipLines = [];
+        foreach ($code as $lineKey => $codeLine) {
+            $zipLines[] = $this->zipLine($codeLine);
+        }
+
+        $zipLines = implode(',', $zipLines);
+
+        $request = [
+            'contrast' => $contrast,
+            'bluePwm' => $bluePwm,
+            'blue' => $blue?1:0,
+            'cl' => $zipLines,
+        ];
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('POST')
+            ->setUrl('http://192.168.1.27/nokia5110-save.lua')
+            ->setData($request)
+            ->setOptions([
+                'timeout' => 10, // set timeout to 5 seconds for the case server is not responding
+            ])
+            ->send();
+        if ($response->isOk) {
+           print_r($response->content);
+        } else {
+            print_r($response);
+        }
+
+    }
+
+    public function actionShowPrice(){
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('GET')
+            ->setUrl('http://192.168.1.27/nokia5110-load.lua')
+            ->setOptions([
+                'timeout' => 10, // set timeout to 5 seconds for the case server is not responding
+            ])
+            ->send();
+        if ($response->isOk) {
+            print_r($response->content);
+        } else {
+            print_r($response);
+        }
+
+    }
+
+
+    /**
+     * Сжимаем строку.
+     * Алгоритм - начинаем с 0
+     * Определяем количество символов. Потом 1, потом опять 0
+     * 001111001 = 2421
+     * 110001001 = 023121
+     */
+    private function zipLine($lineArray){
+        //$lineArray = [0,0,1,1,1,1,0,0,1];
+        //print_r($lineArray);
+        $lastChar = 0;
+        $resultString = "";
+        $count = 0;
+        foreach (array_values($lineArray) as $key => $char) {
+            if($lastChar === $char) {
+                $count++;
+            } else {
+                $resultString .= (string)$count.'.';
+                $lastChar = $char;
+                $count = 1;
+            }
+        }
+        $resultString .= (string)$count;
+        return $resultString;
+    }
+
+
+    private function sendLine($str, $lineCount) {
+        $params = ['cl' => implode('', $str), 'line' => $lineCount];
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('POST')
+            ->setUrl('http://192.168.1.27/nokia5110.lua')
+            ->setData($params)
+            ->send();
+        if ($response->isOk) {
+            echo time()." - Удачная попытка отправки строки";
+            return true;
+        } else {
+            echo time()." - ошибка отправки строки";
+            sleep(1);
+            return $this->sendLine($str, $lineCount);
+        }
+    }
+
+    /**
+     * считываем количество нулей в строке
+     * @param $str
+     * @return int
+     */
+    private function countZero($str){
+        preg_match('/^0+/', $str, $res);
+        if(count($res) > 0) {
+            return strlen($res[0]);
+        } else {
+            return 0;
+        }
     }
 }

@@ -11,6 +11,8 @@ let prevSmallImage = $("#prevSmallImage");
 let modalLoadTemplate = $("#modalLoadTemplate");
 let templatesList = $("#templatesList");
 let onlyMy = $("#onlyMy");
+let savePrice = $("#savePrice");
+let logField = $("#logField");
 
 let colorActive = "#000";
 let colorClear = "#fff";
@@ -218,3 +220,35 @@ function drawGenerateCode(code, drawField){
 if(codeGenerate) {
     drawGenerateCode(codeGenerate, screenDrawLeft);
 }
+
+savePrice.on('click', function(){
+    logField.html('');
+
+    let priceId = $("#priceId").val();
+    if(!priceId) {
+        logField.append('Не указан прайс <br>');
+        return false;
+    }
+
+    logField.append('Загрузка прайса ID: '+ priceId+' <br>');
+    $.get(urlSavePrice, {
+        id:priceId,
+        contrast:$("#contrast").val(),
+        bluePwm:$("#bluePwm").val(),
+        blue:$("#blue").prop('checked')?1:0,
+    }, function(data) {
+        cl(data)
+        logField.append('Данные загружены в прайс <br>');
+        logField.append('Выполнение загрузки отображения <br>');
+        $.get(urlShowPrice, function(data) {
+            cl(data)
+            logField.append('Данные отображены <br>');
+        }).fail(function(data) {
+            logField.append('Ошибка построения данных прайса ID: '+ priceId+' <br>');
+            cl(data)
+        })
+    }).fail(function(data) {
+        logField.append('Ошибка отправки прайса ID: '+ priceId+' <br>');
+        cl(data)
+    })
+})

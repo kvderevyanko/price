@@ -31,8 +31,25 @@ $this->title = 'Рисование';
         <hr>
         <span class="btn btn-warning" id="prevSmallImage">Предпросмотр</span>
     </div>
-    <div class="col-sm-9">
+    <div class="col-sm-3">
         <div id="screenDrawLeftResult"></div>
+    </div>
+    <div class="col-sm-2">
+        <label>Контраст</label><br>
+        <input type="range" min="100" max="170" step="1" id="contrast">
+
+        <label>Яркость подсветки</label><br>
+        <input type="range" min="0" max="1023" id="bluePwm">
+
+        <label>
+            <?=Html::checkbox('', true, ['id' => 'blue'])?>
+            Включить подсветку
+        </label><br>
+        <input type="hidden" value="<?=Yii::$app->request->get('id')?>" id="priceId">
+        <span class="btn btn-success" id="savePrice">Отправить</span>
+    </div>
+    <div class="col-sm-4 text-small" id="logField">
+
     </div>
 </div>
 
@@ -41,6 +58,8 @@ $this->title = 'Рисование';
     let urlSaveMainTemplate = "<?=\yii\helpers\Url::to(['save-main-template'])?>";
     let urlLoadMainTemplate = "<?=\yii\helpers\Url::to(['load-main-template'])?>";
     let urlDeleteMainTemplate = "<?=\yii\helpers\Url::to(['delete-main-template'])?>";
+    let urlSavePrice = "<?=\yii\helpers\Url::to(['save-price'])?>";
+    let urlShowPrice = "<?=\yii\helpers\Url::to(['show-price'])?>";
     let codeGenerate = "";
     <?php if($codeGenerate):?>
     codeGenerate = '<?=$codeGenerate?>';
