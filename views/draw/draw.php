@@ -35,20 +35,26 @@ $this->title = 'Рисование';
         <div id="screenDrawLeftResult"></div>
     </div>
     <div class="col-sm-2">
+        <label>Устройствo</label><br>
+        <?=Html::dropDownList('', '', [
+            1 => 'Синий',
+            2 => 'Левый',
+            3 => 'Правый',
+        ], ['id'=>"deviceId", 'class' => 'form-control'])?>
+
         <label>Контраст</label><br>
-        <input type="range" min="100" max="170" step="1" id="contrast">
+        <?=Html::input('range', '', '', ['min'=>"100", 'max'=>"170", 'step'=>"1", 'id'=>"contrast"])?>
 
         <label>Яркость подсветки</label><br>
-        <input type="range" min="0" max="1023" id="bluePwm">
-
+        <?=Html::input('range', '', '', ['min'=>"0", 'max'=>"1023", 'id'=>"bluePwm"])?>
         <label>
             <?=Html::checkbox('', true, ['id' => 'blue'])?>
             Включить подсветку
         </label><br>
-        <input type="hidden" value="<?=Yii::$app->request->get('id')?>" id="priceId">
+        <?=Html::input('hidden', '', Yii::$app->request->get('id'), ['min'=>"0", 'max'=>"1023", 'id'=>"priceId"])?>
         <span class="btn btn-success" id="savePrice">Отправить</span>
 
-        <span class="btn btn-danger btn-sm" style="margin-top: 50px" id="syncBase">Синхронизация баз</span>
+        <span class="btn btn-danger btn-sm" id="syncBase">Синхронизация баз</span>
     </div>
     <div class="col-sm-4 text-small" id="logField">
 

@@ -225,8 +225,9 @@ savePrice.on('click', function(){
     logField.html('');
 
     let priceId = $("#priceId").val();
-    if(!priceId) {
-        logField.append('Не указан прайс <br>');
+    let deviceId = $("#deviceId").val()
+    if(!priceId || !deviceId) {
+        logField.append('Не указан прайс и или устройство <br>');
         return false;
     }
 
@@ -236,11 +237,12 @@ savePrice.on('click', function(){
         contrast:$("#contrast").val(),
         bluePwm:$("#bluePwm").val(),
         blue:$("#blue").prop('checked')?1:0,
+        deviceId:deviceId,
     }, function(data) {
         cl(data)
         logField.append('Данные загружены в прайс <br>');
         logField.append('Выполнение загрузки отображения <br>');
-        $.get(urlShowPrice, function(data) {
+        $.get(urlShowPrice, {deviceId:deviceId}, function(data) {
             cl(data)
             logField.append('Данные отображены <br>');
         }).fail(function(data) {

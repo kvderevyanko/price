@@ -52,3 +52,10 @@ main > .container {
 .templateModalPrev table .ba {
     background-color: #000;
 }
+
+#syncBase {
+    margin-top: 50px
+}
+#deviceId {
+    margin-bottom: 15px
+}

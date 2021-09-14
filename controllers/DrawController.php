@@ -18,6 +18,10 @@ use app\models\ContactForm;
 
 class DrawController extends Controller
 {
+    const IP_1 = '192.168.1.30';
+    const IP_2 = '192.168.1.31';
+    const IP_3 = '192.168.1.32';
+
     /**
      * {@inheritdoc}
      */
@@ -100,7 +104,7 @@ class DrawController extends Controller
         return 0;
     }
 
-    public function actionSavePrice($id, $contrast = 125, $blue = true, $bluePwm = 1000){
+    public function actionSavePrice($id, $deviceId,  $contrast = 125, $blue = true, $bluePwm = 1000){
         $template = MainTemplate::findOne($id);
         if ($template === null) {
             throw new NotFoundHttpException("Шаблон не найден");
@@ -145,7 +149,7 @@ class DrawController extends Controller
             usleep(100);
             $response = $client->createRequest()
                 ->setMethod('POST')
-                ->setUrl('http://192.168.1.27/nokia5110-save.lua')
+                ->setUrl('http://'.$this->deviceIp($deviceId).'/nokia5110-save.lua')
                 ->setData($request)
                 ->setOptions([
                     'timeout' => 5, // set timeout to 5 seconds for the case server is not responding
@@ -168,12 +172,12 @@ class DrawController extends Controller
 
     }
 
-    public function actionShowPrice(){
+    public function actionShowPrice($deviceId){
         usleep(100);
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('GET')
-            ->setUrl('http://192.168.1.27/nokia5110-load.lua')
+            ->setUrl('http://'.$this->deviceIp($deviceId).'/nokia5110-load.lua')
             ->setOptions([
                 'timeout' => 10, // set timeout to 5 seconds for the case server is not responding
             ])
@@ -257,7 +261,7 @@ class DrawController extends Controller
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('POST')
-            ->setUrl('http://192.168.1.27/nokia5110.lua')
+            ->setUrl('http://192.168.1.31/nokia5110.lua')
             ->setData($params)
             ->send();
         if ($response->isOk) {
@@ -281,6 +285,18 @@ class DrawController extends Controller
             return strlen($res[0]);
         } else {
             return 0;
+        }
+    }
+
+    //озвращаем ip устройства
+    private function deviceIp($deviceId) {
+        switch ($deviceId) {
+            case 1:
+                return self::IP_1;
+            case 2:
+                return self::IP_2;
+            default :
+                return self::IP_3;
         }
     }
 }

@@ -1,4 +1,29 @@
+--[[
+	Nokia 5110 LED with PCD8544
+	8 November 2018
+	Author: dante@serveronthemove.com.au
+	Hardware:
+		nodeMCU ESP8266(EX) Devkit V3
+		8 pin Nokia 5110 84x48 display w PCD8544
 
+	Wiring:
+		LED			->	NodeMCU 8266
+		1 - RST		->	D0/GPIO16
+		2 - CE (CS)	->	D8/GPIO15 - pull down with 10K to GND
+		3 - DC		->	D4/GPIO2
+		4 - DIN		->	D7/HMOSI
+		5 - CLK		->	D5/HSCLK
+		6 - VCC		->	3.3V
+		7 - BL		->	Not used in this example
+		8 - GND		->	GND
+
+	nodeMCU Firmware Build
+		built against the master branch and includes the following modules: file, gpio, i2c, net, node, spi, tmr, u8g2, uart, wifi, tls
+		u8g2 - SPI - pcd8544_84x48 module
+		u8g2 - fonts: 6x10_tf, 5x8)tf
+
+		https://www.hackster.io/sotm/nokia-5110-pcd8544-with-nodemcu-esp8266-using-lua-and-u8g2-8ea055
+--]]
 
 PIN_CS  = 8 -- GPIO15, pull-down 10k to GND
 PIN_DC  = 4 -- GPIO2
