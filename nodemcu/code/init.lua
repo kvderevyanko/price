@@ -21,6 +21,7 @@ if file.exists("httpserver-compile.lua") then
    file.remove("httpserver-compile.lua")
 end
 
+dofile("load-price.lc");
 
 -- Set up NodeMCU's WiFi
 dofile("httpserver-wifi.lc")

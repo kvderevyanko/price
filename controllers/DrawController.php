@@ -121,34 +121,55 @@ class DrawController extends Controller
             $zipLines[] = $this->zipLine($codeLine);
         }
 
-        $zipLines = implode(',', $zipLines);
-
         $request = [
             'contrast' => $contrast,
             'bluePwm' => $bluePwm,
             'blue' => $blue?1:0,
-            'cl' => $zipLines,
+            'cl' => '',
+            'part' => 0,
         ];
 
+        $a = [];
+        //Разбиваем на 5 массивов, и каждый посылаем отдельно
+        $a[1] = array_slice($zipLines, 0, 10);
+        $a[2] = array_slice($zipLines, 10, 10);
+        $a[3] = array_slice($zipLines, 20, 10);
+        $a[4] = array_slice($zipLines, 30, 10);
+        $a[5] = array_slice($zipLines, 40, 10);
+
         $client = new Client();
-        $response = $client->createRequest()
-            ->setMethod('POST')
-            ->setUrl('http://192.168.1.27/nokia5110-save.lua')
-            ->setData($request)
-            ->setOptions([
-                'timeout' => 10, // set timeout to 5 seconds for the case server is not responding
-            ])
-            ->send();
-        if ($response->isOk) {
-           print_r($response->content);
-        } else {
-            print_r($response);
+
+        for ($i = 1; $i <= 5; $i++) {
+            $request['cl'] =  implode(',', $a[$i]);;
+            $request['part'] =  $i;
+            usleep(100);
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://192.168.1.27/nokia5110-save.lua')
+                ->setData($request)
+                ->setOptions([
+                    'timeout' => 5, // set timeout to 5 seconds for the case server is not responding
+                ])
+                ->send();
+            if ($response->isOk) {
+                print_r($response->content);
+            } else {
+                print_r($response);
+            }
         }
+
+
+
+
+    }
+
+    //Отсылка прайса по частям
+    private function sendPricePart(){
 
     }
 
     public function actionShowPrice(){
-
+        usleep(100);
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('GET')

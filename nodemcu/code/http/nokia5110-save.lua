@@ -10,6 +10,8 @@ return function(connection, req, args)
         local blue = 0;
         local bluePwm = 0;
         local codeLine = "";
+        local part = "";
+
         for name, value in pairs(rd) do
             if name == "contrast" then
                 contrast = value;
@@ -20,16 +22,27 @@ return function(connection, req, args)
             if name == "blue" then
                 blue = value;
             end ;
+
+            if name == "part" then
+                part = tonumber(value);
+            end ;
             --Если код, то обрабатываем дисплей
             if name == "cl" then
                 codeLine = value;
             end ;
         end ;
 
-        file.open("pice.img", "w+")
-        file.writeline(contrast) --контраст
-        file.writeline(blue) --включён дисплей или нет
-        file.writeline(bluePwm) -- яркость дисплея
+        --Смотрим какая часть пришла. Если 1 - то очищаем файл и сохраняем заголовки
+        --если дальше - то просто сохраняем в файл
+        if part == 1 then
+            file.open("pice.img", "w+")
+            file.writeline(contrast) --контраст
+            file.writeline(blue) --включён дисплей или нет
+            file.writeline(bluePwm) -- яркость дисплея
+        else
+            file.open("pice.img", "a+")
+        end
+
         for k in string.gmatch(codeLine, "[^,]+") do
             file.writeline(k)
         end

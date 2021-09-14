@@ -22,7 +22,7 @@ use yii\bootstrap4\Modal;
                 <?php if(array_key_exists($template->userId, $users) && ($user = $users[$template->userId])): ?>
                     <?=$user->name?>
                 <?php endif; ?>
-                <small><em><?=date('m.d H:i')?></em></small>
+                <small><em><?=date('d.m H:i', $template->date)?></em></small>
                 <div  class="text-center">
                     <a href="<?=\yii\helpers\Url::to(['/draw/draw', 'id' => $template->id])?>" target="_blank">
                         <?=\app\models\MainTemplate::returnCodeHtml($template->code)?>
